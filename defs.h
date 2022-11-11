@@ -188,3 +188,24 @@ void   clearpteu(pde_t *pgdir, char *uva);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x) / sizeof((x)[0]))
+
+#define assert(expr) \
+    if (!(expr)) \
+        aFailed(__FILE__, __LINE__)
+
+static void aFailed(char *file, int line) __attribute__((unused));
+static void aFailed(char *file, int line){
+	cprintf("\nKernel Assertion failed in %s on line %d\n", file, line);
+	panic("Assertion Panic");
+}
+
+// #define DEBUG_KERNEL_PRINTS  /* Comment to hide all dprintfs */
+
+#ifdef DEBUG_KERNEL_PRINTS
+#define dprintf(msg, ...) do {\
+	cprintf("%s:%d : "msg, \
+			__FILE__, __LINE__, ##__VA_ARGS__);\
+} while (0)
+#else /* make dprintf do nothing*/
+#define dprintf(msg, ...) {}
+#endif
